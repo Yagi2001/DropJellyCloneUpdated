@@ -9,7 +9,7 @@ public class DragAndDrop : MonoBehaviour
     [SerializeField]
     private Transform[] _gridGroups;
     private Transform _previousClosestGroup;
-    public GameObject block; 
+    public GameObject block;
 
     private void Start()
     {
@@ -64,6 +64,9 @@ public class DragAndDrop : MonoBehaviour
             newPosition.x = _previousClosestGroup.position.x;
             block.transform.position = newPosition;
             var highlight = _previousClosestGroup.GetComponent<HighlightGrids>();
+            BlockMovement blockMovement = block.GetComponent<BlockMovement>();
+            float targetY = FindFurthestAvailableGrid();
+            blockMovement.FallToNonOccupiedGrid( targetY );
             if (highlight != null)
                 highlight.UnhighlightAllChildren();
             _previousClosestGroup = null;
@@ -103,5 +106,23 @@ public class DragAndDrop : MonoBehaviour
             xPositions[i] = _gridGroups[i].position.x;
         }
         return xPositions;
+    }
+
+    private float FindFurthestAvailableGrid()
+    {
+        if (_previousClosestGroup == null)
+            return Mathf.Infinity;
+        float minY = Mathf.Infinity;
+        for (int i = 0; i < _previousClosestGroup.childCount; i++)
+        {
+            Transform child = _previousClosestGroup.GetChild( i );
+            ParentGridInfo gridInfo = child.GetComponent<ParentGridInfo>();
+            if (gridInfo != null && !gridInfo.isOccupied)
+            {
+                if (child.position.y < minY)
+                    minY = child.position.y;
+            }
+        }
+        return minY;
     }
 }
