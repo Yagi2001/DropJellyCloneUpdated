@@ -38,15 +38,42 @@ public class DetectMatch : MonoBehaviour
 
     private IEnumerator DestroyMatchingBlocks( GridInfo matchingNeighbor )
     {
-        FillBlock parentFillBlock = matchingNeighbor.occupyingBlock.transform.parent.GetComponent<FillBlock>();
+        //We store necessary referances
+        ParentGridInfo parentGridNeighbor = matchingNeighbor.transform.parent.GetComponent<ParentGridInfo>();
+        ParentGridInfo parentGrid = transform.parent.GetComponent<ParentGridInfo>();
+        FillBlock parentFillBlockNeighbor = matchingNeighbor.occupyingBlock.transform.parent.GetComponent<FillBlock>();
         FillBlock currentParentFillBlock = _gridInfo.occupyingBlock.transform.parent.GetComponent<FillBlock>();
+        BlockInfo blockInfoNeighbor = matchingNeighbor.occupyingBlock.transform.parent.GetComponent<BlockInfo>();
+        BlockInfo currentBlockInfo = _gridInfo.occupyingBlock.transform.parent.GetComponent<BlockInfo>();
+        // We destroy matching block of neighbor
         Destroy( matchingNeighbor.occupyingBlock );
         matchingNeighbor.occupyingBlock = null;
         yield return null;
-        parentFillBlock.CheckAndFillEmptyPieces();
+        // We destroy matching block of our current
+        parentFillBlockNeighbor.CheckAndFillEmptyPieces();
         Destroy( _gridInfo.occupyingBlock );
         _gridInfo.occupyingBlock = null;
         yield return null;
         currentParentFillBlock.CheckAndFillEmptyPieces();
+        //Resizing done
+        yield return null;
+        // We check and adjust tiles again
+        GameObject[] cornersArrayNeighbor = GetCornerObjects( blockInfoNeighbor);
+        GameObject[] cornersArrayCurrent = GetCornerObjects( currentBlockInfo);
+        parentGridNeighbor.CheckAndAdjustOccupation(cornersArrayNeighbor);
+        yield return null;
+        parentGrid.CheckAndAdjustOccupation( cornersArrayCurrent );
+    }
+    private GameObject[] GetCornerObjects( BlockInfo blockParent )
+    {
+        if (blockParent == null) return new GameObject[0];
+
+        BlockInfo blockInfo = blockParent.GetComponent<BlockInfo>();
+        if (blockInfo == null) return new GameObject[0];
+
+        var cornerObjects = blockInfo.GetCornerStates().Values;
+        GameObject[] cornersArray = new GameObject[cornerObjects.Count];
+        cornerObjects.CopyTo( cornersArray, 0 );
+        return cornersArray;
     }
 }

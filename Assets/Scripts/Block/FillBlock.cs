@@ -17,10 +17,18 @@ public class FillBlock : MonoBehaviour
     {
         _blockInfo = GetComponent<BlockInfo>();
     }
+
     public void CheckAndFillEmptyPieces()
     {
         var corners = GetCorners();
         var nullCorners = GetNullCorners( corners );
+
+        // If all corners are null, destroy the game object
+        if (nullCorners.Count == 4)
+        {
+            Destroy( gameObject );
+            return;
+        }
 
         foreach (var missingCorner in nullCorners)
         {
@@ -69,7 +77,7 @@ public class FillBlock : MonoBehaviour
             UpdateBlockInfoReference( missingCorner, corners[secondaryPartner] );
             return true;
         }
-        return false; 
+        return false;
     }
 
     private bool AdjustGrowth( GameObject obj, bool vertical )
