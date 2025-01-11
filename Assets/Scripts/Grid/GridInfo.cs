@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class GridInfo : MonoBehaviour
 {
+    private DetectMatch _detectMatch;
     public GameObject occupyingBlock;
 
     public GridInfo topNeighbor;
     public GridInfo bottomNeighbor;
     public GridInfo leftNeighbor;
     public GridInfo rightNeighbor;
-
+    private void Start()
+    {
+        _detectMatch = GetComponent<DetectMatch>();
+    }
     public void AdjustGridOccupyingBlock( GameObject[] cubes )
     {
         if (cubes == null || cubes.Length == 0)
@@ -28,5 +32,13 @@ public class GridInfo : MonoBehaviour
             }
         }
         occupyingBlock = closestCube;
+        StartCoroutine( DetectMatchingNeighborsCoroutine() );
+    }
+    //Using coroutine in here to wait for all grids adjustments
+    private IEnumerator DetectMatchingNeighborsCoroutine()
+    {
+        yield return null;
+        if (_detectMatch != null)
+            _detectMatch.DetectMatchingNeighbors();
     }
 }

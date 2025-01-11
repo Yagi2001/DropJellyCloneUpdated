@@ -17,16 +17,6 @@ public class FillBlock : MonoBehaviour
     {
         _blockInfo = GetComponent<BlockInfo>();
     }
-
-    private void Update()
-    {
-        //Update for Test Purposes
-        //CheckAndFillEmptyPieces();
-    }
-
-
-    //This code can change later since we will know about the piece that is destroyed
-    //Works great now as testing part
     public void CheckAndFillEmptyPieces()
     {
         var corners = GetCorners();

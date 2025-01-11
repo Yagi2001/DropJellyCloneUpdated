@@ -47,8 +47,9 @@ public class BlockMovement : MonoBehaviour
             return;
         if (blockInfo == null)
             return;
-
-        // Converting corner objects to an array
+        ParentGridInfo parentGridInfo = parentGrid.GetComponent<ParentGridInfo>();
+        parentGridInfo.isOccupied = true;
+        // Converting corner objects to an array for GridInfo to look
         var cornerObjects = blockInfo.GetCornerStates().Values;
         GameObject[] cornersArray = new GameObject[cornerObjects.Count];
         cornerObjects.CopyTo( cornersArray, 0 );
@@ -57,10 +58,7 @@ public class BlockMovement : MonoBehaviour
         {
             Transform child = parentGrid.transform.GetChild( i );
             GridInfo gridInfo = child.GetComponent<GridInfo>();
-            if (gridInfo != null)
-            {
-                gridInfo.AdjustGridOccupyingBlock( cornersArray );
-            }
+            gridInfo.AdjustGridOccupyingBlock( cornersArray );
         }
     }
 

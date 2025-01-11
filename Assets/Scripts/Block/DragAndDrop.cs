@@ -71,6 +71,7 @@ public class DragAndDrop : MonoBehaviour
                 highlight.UnhighlightAllChildren();
             _previousClosestGroup = null;
         }
+        BlockSpawner.BlocksSettled?.Invoke();
     }
 
     private Vector3 GetMouseWorldPosition()
