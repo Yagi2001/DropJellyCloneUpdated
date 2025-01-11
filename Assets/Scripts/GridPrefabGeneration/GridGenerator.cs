@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
-    public GameObject tilePrefab;
-    public int gridWidth = 6;
-    public int gridHeight = 6;
-    public float spacing = 1.1f;
-    public GameObject parentObject;
+    [SerializeField]
+    private GameObject _tilePrefab;
+    [SerializeField]
+    private GameObject _parentObject;
+    [SerializeField]
+    private int _gridWidth = 6;
+    [SerializeField]
+    private int _gridHeight = 6;
+    [SerializeField]
+    private float _spacing = 1.1f;
+
 
     private Dictionary<Vector2Int, GridInfo> allGridInfos = new Dictionary<Vector2Int, GridInfo>();
 
@@ -20,17 +26,17 @@ public class GridGenerator : MonoBehaviour
 
     private void GenerateGrid()
     {
-        if (parentObject == null)
-            parentObject = new GameObject( "GridParent" );
+        if (_parentObject == null)
+            _parentObject = new GameObject( "GridParent" );
         allGridInfos.Clear();
-        for (int x = 0; x < gridWidth; x++)
+        for (int x = 0; x < _gridWidth; x++)
         {
-            for (int y = 0; y < gridHeight; y++)
+            for (int y = 0; y < _gridHeight; y++)
             {
-                Vector3 position = new Vector3( x * spacing, y * spacing, 0 );
-                GameObject tile = Instantiate( tilePrefab, position, Quaternion.identity );
+                Vector3 position = new Vector3( x * _spacing, y * _spacing, 0 );
+                GameObject tile = Instantiate( _tilePrefab, position, Quaternion.identity );
                 tile.name = $"Parent Grid {x},{y}";
-                tile.transform.parent = parentObject.transform;
+                tile.transform.parent = _parentObject.transform;
                 NameAndTrackChildGridInfos( tile, x, y );
             }
         }
