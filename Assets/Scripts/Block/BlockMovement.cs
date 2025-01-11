@@ -5,16 +5,28 @@ public class BlockMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
     private Coroutine _fallCoroutine;
+    public BlockInfo blockInfo;
 
-    public void FallToNonOccupiedGrid( float targetPosY )
+    private void Start()
     {
-        if (_fallCoroutine != null)
-            StopCoroutine( _fallCoroutine );
-        _fallCoroutine = StartCoroutine( MoveToTargetY( targetPosY ) );
+        blockInfo = GetComponent<BlockInfo>();
     }
 
-    private IEnumerator MoveToTargetY( float targetPosY )
+    public void FallToNonOccupiedGrid( GameObject targetGrid )
     {
+        if (targetGrid == null)
+            return;
+
+        if (_fallCoroutine != null)
+            StopCoroutine( _fallCoroutine );
+
+        _fallCoroutine = StartCoroutine( MoveToTargetGrid( targetGrid ) );
+    }
+
+    private IEnumerator MoveToTargetGrid( GameObject targetGrid )
+    {
+        float targetPosY = targetGrid.transform.position.y;
+
         while (Mathf.Abs( transform.position.y - targetPosY ) > 0.01f)
         {
             Vector3 newPosition = transform.position;
@@ -25,6 +37,31 @@ public class BlockMovement : MonoBehaviour
         Vector3 finalPosition = transform.position;
         finalPosition.y = targetPosY;
         transform.position = finalPosition;
+        AdjustGridInfo( targetGrid );
         _fallCoroutine = null;
     }
+
+    private void AdjustGridInfo( GameObject parentGrid )
+    {
+        if (parentGrid == null)
+            return;
+        if (blockInfo == null)
+            return;
+
+        // Converting corner objects to an array
+        var cornerObjects = blockInfo.GetCornerStates().Values;
+        GameObject[] cornersArray = new GameObject[cornerObjects.Count];
+        cornerObjects.CopyTo( cornersArray, 0 );
+        int childCount = parentGrid.transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = parentGrid.transform.GetChild( i );
+            GridInfo gridInfo = child.GetComponent<GridInfo>();
+            if (gridInfo != null)
+            {
+                gridInfo.AdjustGridOccupyingBlock( cornersArray );
+            }
+        }
+    }
+
 }

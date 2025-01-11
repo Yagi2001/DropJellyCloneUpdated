@@ -65,8 +65,8 @@ public class DragAndDrop : MonoBehaviour
             block.transform.position = newPosition;
             var highlight = _previousClosestGroup.GetComponent<HighlightGrids>();
             BlockMovement blockMovement = block.GetComponent<BlockMovement>();
-            float targetY = FindFurthestAvailableGrid();
-            blockMovement.FallToNonOccupiedGrid( targetY );
+            GameObject targetGrid = FindFurthestAvailableGrid();
+            blockMovement.FallToNonOccupiedGrid( targetGrid );
             if (highlight != null)
                 highlight.UnhighlightAllChildren();
             _previousClosestGroup = null;
@@ -108,11 +108,13 @@ public class DragAndDrop : MonoBehaviour
         return xPositions;
     }
 
-    private float FindFurthestAvailableGrid()
+    private GameObject FindFurthestAvailableGrid()
     {
         if (_previousClosestGroup == null)
-            return Mathf.Infinity;
+            return null;
+        GameObject furthestGrid = null;
         float minY = Mathf.Infinity;
+
         for (int i = 0; i < _previousClosestGroup.childCount; i++)
         {
             Transform child = _previousClosestGroup.GetChild( i );
@@ -120,9 +122,12 @@ public class DragAndDrop : MonoBehaviour
             if (gridInfo != null && !gridInfo.isOccupied)
             {
                 if (child.position.y < minY)
+                {
                     minY = child.position.y;
+                    furthestGrid = child.gameObject;
+                }
             }
         }
-        return minY;
+        return furthestGrid;
     }
 }

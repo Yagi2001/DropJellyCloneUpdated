@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MiniGrid
   - GridGroup
+  - Cube
   layers:
   - Default
   - TransparentFX
