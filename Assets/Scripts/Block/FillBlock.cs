@@ -21,13 +21,13 @@ public class FillBlock : MonoBehaviour
     private void Update()
     {
         //Update for Test Purposes
-        CheckAndFillEmptyPieces();
+        //CheckAndFillEmptyPieces();
     }
 
 
     //This code can change later since we will know about the piece that is destroyed
     //Works great now as testing part
-    private void CheckAndFillEmptyPieces()
+    public void CheckAndFillEmptyPieces()
     {
         var corners = GetCorners();
         var nullCorners = GetNullCorners( corners );
