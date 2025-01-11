@@ -5,6 +5,8 @@ public class BlockSpawner : MonoBehaviour
 {
     private FillBlock _fillBlock;
     [SerializeField]
+    private DragAndDrop _dragAndDrop;
+    [SerializeField]
     private GameObject[] _blockPrefab;
     [SerializeField]
     private GameObject[] _colorPrefabs;
@@ -22,6 +24,7 @@ public class BlockSpawner : MonoBehaviour
         int numToDestroy = Random.Range( 1, childCount );
         _fillBlock = newBlock.GetComponent<FillBlock>();
         DestroyRandomChildren( newBlock, numToDestroy );
+        _dragAndDrop.block = newBlock;
     }
 
     private void DestroyRandomChildren( GameObject parent, int numToDestroy )
