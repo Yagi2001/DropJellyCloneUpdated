@@ -37,7 +37,7 @@ public class GridInfo : MonoBehaviour
     //Using coroutine in here to wait for all grids adjustments
     private IEnumerator DetectMatchingNeighborsCoroutine()
     {
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
         if (_detectMatch != null)
             _detectMatch.DetectMatchingNeighbors();
     }

@@ -15,6 +15,12 @@ public class ParentGridInfo : MonoBehaviour
             _topParentGridInfo = topParentGrid.GetComponent<ParentGridInfo>();
     }
 
+    private void Update()
+    {
+        if (occupyingBlock == null)
+            isOccupied = false;
+    }
+
     public void CheckAndAdjustOccupation( GameObject[] cubes )
     {
         AdjustAllChildGridOccupyingBlocks( cubes );
