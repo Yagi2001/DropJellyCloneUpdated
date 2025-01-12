@@ -13,18 +13,38 @@ public class ParentGridInfo : MonoBehaviour
         isOccupied = false;
         if (topParentGrid != null)
             _topParentGridInfo = topParentGrid.GetComponent<ParentGridInfo>();
-    }
 
-    private void Update()
-    {
-        //if (occupyingBlock == null)
-            //isOccupied = false;
+        FindAndAssignOccupyingBlockAtStart();
     }
 
     public void CheckAndAdjustOccupation( GameObject[] cubes )
     {
         AdjustAllChildGridOccupyingBlocks( cubes );
         CheckOccupation();
+    }
+
+    private void FindAndAssignOccupyingBlockAtStart()
+    {
+        GameObject[] levelCubes = GameObject.FindGameObjectsWithTag( "LevelCube" );
+
+        foreach (GameObject cube in levelCubes)
+        {
+            float distance = Vector3.Distance( transform.position, cube.transform.position );
+            if (distance <= 0.1f)
+            {
+                isOccupied = true;
+                occupyingBlock = cube;
+                BlockInfo blockInfo = cube.GetComponent<BlockInfo>();
+                if (blockInfo != null)
+                {
+                    var cornerObjects = blockInfo.GetCornerStates().Values;
+                    GameObject[] cornersArray = new GameObject[cornerObjects.Count];
+                    cornerObjects.CopyTo( cornersArray, 0 );
+                    CheckAndAdjustOccupation( cornersArray );
+                }
+                return;
+            }
+        }
     }
 
     private void AdjustAllChildGridOccupyingBlocks( GameObject[] cubes )
