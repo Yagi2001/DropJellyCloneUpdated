@@ -61,7 +61,6 @@ public class DetectMatch : MonoBehaviour
         GameObject[] cornersArrayNeighbor = GetCornerObjects( blockInfoNeighbor);
         GameObject[] cornersArrayCurrent = GetCornerObjects( currentBlockInfo);
         parentGridNeighbor.CheckAndAdjustOccupation(cornersArrayNeighbor);
-        yield return null;
         parentGrid.CheckAndAdjustOccupation( cornersArrayCurrent );
     }
     private GameObject[] GetCornerObjects( BlockInfo blockParent )

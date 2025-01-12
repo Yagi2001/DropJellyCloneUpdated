@@ -4,10 +4,15 @@ using UnityEngine;
 public class ParentGridInfo : MonoBehaviour
 {
     public bool isOccupied;
+    public GameObject occupyingBlock;
+    public GameObject topParentGrid;
+    private ParentGridInfo _topParentGridInfo;
 
     private void Start()
     {
         isOccupied = false;
+        if (topParentGrid != null)
+            _topParentGridInfo = topParentGrid.GetComponent<ParentGridInfo>();
     }
 
     public void CheckAndAdjustOccupation( GameObject[] cubes )
@@ -27,15 +32,22 @@ public class ParentGridInfo : MonoBehaviour
 
     private void CheckOccupation()
     {
-        GridInfo[] childGridInfos = GetComponentsInChildren<GridInfo>();
-        foreach (var gridInfo in childGridInfos)
+        if (occupyingBlock != null)
         {
-            if (gridInfo.occupyingBlock != null)
+            isOccupied = true;
+            return;
+        }
+
+        Destroy( occupyingBlock );
+        isOccupied = false;
+
+        if (_topParentGridInfo != null && _topParentGridInfo.isOccupied && _topParentGridInfo.occupyingBlock != null)
+        {
+            BlockMovement blockMovement = _topParentGridInfo.occupyingBlock.GetComponent<BlockMovement>();
+            if (blockMovement != null)
             {
-                isOccupied = true;
-                return;
+                blockMovement.FallToNonOccupiedGrid( gameObject );
             }
         }
-        isOccupied = false;
     }
 }

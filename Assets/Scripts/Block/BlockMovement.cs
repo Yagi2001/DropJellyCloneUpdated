@@ -48,6 +48,7 @@ public class BlockMovement : MonoBehaviour
         if (blockInfo == null)
             return;
         ParentGridInfo parentGridInfo = parentGrid.GetComponent<ParentGridInfo>();
+        parentGridInfo.occupyingBlock = gameObject;
         parentGridInfo.isOccupied = true;
         // Converting corner objects to an array for GridInfo to look
         var cornerObjects = blockInfo.GetCornerStates().Values;
