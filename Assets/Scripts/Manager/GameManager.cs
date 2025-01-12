@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     private GameObject _gameOverScreen;
     private int _moveCount;
     private int _goalCount;
+    [SerializeField]
+    private AudioSource _matchSound;
     private void OnEnable()
     {
         _moveCount = _levelData.maxMoves;
@@ -41,13 +43,15 @@ public class GameManager : MonoBehaviour
     {
         _moveCount--;
         _movesText.text = _moveCount.ToString();
-        if (_moveCount <= 0 && _nextLevelScreen.activeInHierarchy == false)
+        if (_moveCount < 0 && _nextLevelScreen.activeInHierarchy == false)
                 _gameOverScreen.SetActive( true );
     }
 
     private void UpdateGoalCount()
     {
         _goalCount -= 2;
+        if(_nextLevelScreen.activeInHierarchy == false && _gameOverScreen.activeInHierarchy == false)
+            _matchSound.Play();
         _goalText.text = _goalCount.ToString();
         if (_goalCount <= 0 && _gameOverScreen.activeInHierarchy == false)
             _nextLevelScreen.SetActive( true );
@@ -58,13 +62,9 @@ public class GameManager : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
-        {
             SceneManager.LoadScene( nextSceneIndex );
-        }
         else
-        {
             SceneManager.LoadScene( 0 );
-        }
     }
     public void RestartLevel()
     {
