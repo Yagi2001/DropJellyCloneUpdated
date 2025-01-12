@@ -17,8 +17,8 @@ public class ParentGridInfo : MonoBehaviour
 
     private void Update()
     {
-        if (occupyingBlock == null)
-            isOccupied = false;
+        //if (occupyingBlock == null)
+            //isOccupied = false;
     }
 
     public void CheckAndAdjustOccupation( GameObject[] cubes )
@@ -49,6 +49,7 @@ public class ParentGridInfo : MonoBehaviour
 
         if (_topParentGridInfo != null && _topParentGridInfo.isOccupied && _topParentGridInfo.occupyingBlock != null)
         {
+            _topParentGridInfo.isOccupied = false;
             BlockMovement blockMovement = _topParentGridInfo.occupyingBlock.GetComponent<BlockMovement>();
             if (blockMovement != null)
             {

@@ -9,7 +9,6 @@ public class DetectMatch : MonoBehaviour
 
     private void Start()
     {
-        _animationDuration = 0.3f;
         _gridInfo = GetComponent<GridInfo>();
     }
 
@@ -80,23 +79,29 @@ public class DetectMatch : MonoBehaviour
     //Since this is a basic animation I used codes to animate instead of clips
     private IEnumerator AnimateAndDestroy( GameObject block1, GameObject block2 )
     {
-        float duration = _animationDuration; // Duration of the animation
+        if (block1 == null || block2 == null)
+            yield break;
+
+        float duration = _animationDuration;
         float elapsedTime = 0f;
 
         Vector3 startScale1 = block1.transform.localScale;
         Vector3 startScale2 = block2.transform.localScale;
-        Vector3 endScale1 = startScale1 * 1.5f; // Target scale
+        Vector3 endScale1 = startScale1 * 1.5f;
         Vector3 endScale2 = startScale2 * 1.5f;
 
         Vector3 startPosition1 = block1.transform.position;
         Vector3 startPosition2 = block2.transform.position;
-        Vector3 targetPosition = (startPosition1 + startPosition2) / 2; // Midpoint
+        Vector3 targetPosition = (startPosition1 + startPosition2) / 2;
 
         while (elapsedTime < duration)
         {
-            elapsedTime += Time.deltaTime;
+            if (block1 == null || block2 == null)
+            {
+                yield break;
+            }
 
-            //Creating animations by changing positions and scales
+            elapsedTime += Time.deltaTime;
             block1.transform.position = Vector3.Lerp( startPosition1, targetPosition, elapsedTime / duration );
             block2.transform.position = Vector3.Lerp( startPosition2, targetPosition, elapsedTime / duration );
 
