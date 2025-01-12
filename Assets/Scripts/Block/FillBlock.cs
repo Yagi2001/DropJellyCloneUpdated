@@ -20,7 +20,6 @@ public class FillBlock : MonoBehaviour
 
     public void CheckAndFillEmptyPieces()
     {
-        Debug.Log( "Called" );
         var corners = GetCorners();
         var nullCorners = GetNullCorners( corners );
 

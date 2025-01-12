@@ -5,6 +5,7 @@ using UnityEngine;
 public class BlockSpawner : MonoBehaviour
 {
     public static Action BlocksSettled;
+    private int _activeBlockCount;
     private FillBlock _fillBlock;
     [SerializeField]
     private DragAndDrop _dragAndDrop;
@@ -15,26 +16,33 @@ public class BlockSpawner : MonoBehaviour
     private void OnEnable()
     {
         BlocksSettled += SpawnBlock;
+        DragAndDrop.placedBlock += ReduceActiveBlock;
     }
 
     private void OnDisable()
     {
         BlocksSettled -= SpawnBlock;
+        DragAndDrop.placedBlock -= ReduceActiveBlock;
     }
     private void Start()
     {
+        _activeBlockCount = 0;
         SpawnBlock();
     }
 
-    public void SpawnBlock()
+    private void SpawnBlock()
     {
-        GameObject selectedBlockPrefab = _blockPrefab[UnityEngine.Random.Range( 0, _blockPrefab.Length )];
-        GameObject newBlock = Instantiate( selectedBlockPrefab, transform.position, Quaternion.identity );
-        int childCount = newBlock.transform.childCount;
-        int numToDestroy = UnityEngine.Random.Range( 1, childCount );
-        _fillBlock = newBlock.GetComponent<FillBlock>();
-        DestroyRandomChildren( newBlock, numToDestroy );
-        _dragAndDrop.block = newBlock;
+        if (_activeBlockCount <= 0)
+        {
+            GameObject selectedBlockPrefab = _blockPrefab[UnityEngine.Random.Range( 0, _blockPrefab.Length )];
+            GameObject newBlock = Instantiate( selectedBlockPrefab, transform.position, Quaternion.identity );
+            int childCount = newBlock.transform.childCount;
+            int numToDestroy = UnityEngine.Random.Range( 1, childCount );
+            _fillBlock = newBlock.GetComponent<FillBlock>();
+            DestroyRandomChildren( newBlock, numToDestroy );
+            _activeBlockCount++;
+            _dragAndDrop.block = newBlock;
+        }
     }
 
     private void DestroyRandomChildren( GameObject parent, int numToDestroy )
@@ -53,6 +61,11 @@ public class BlockSpawner : MonoBehaviour
             destroyedCount++;
         }
         StartCoroutine( CallCheckAndFillEmptyPieces() );
+    }
+
+    private void ReduceActiveBlock()
+    {
+        _activeBlockCount--;
     }
 
     private IEnumerator CallCheckAndFillEmptyPieces()

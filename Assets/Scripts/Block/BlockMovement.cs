@@ -37,6 +37,8 @@ public class BlockMovement : MonoBehaviour
         Vector3 finalPosition = transform.position;
         finalPosition.y = targetPosY;
         transform.position = finalPosition;
+        BlockSpawner.BlocksSettled?.Invoke();
+        GameManager.MoveMade?.Invoke();
         AdjustGridInfo( targetGrid );
         _fallCoroutine = null;
     }

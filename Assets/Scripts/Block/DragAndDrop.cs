@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class DragAndDrop : MonoBehaviour
 {
+    public static Action placedBlock;
     private float _minX;
     private float _maxX;
     private Camera _mainCamera;
@@ -70,8 +72,8 @@ public class DragAndDrop : MonoBehaviour
             if (highlight != null)
                 highlight.UnhighlightAllChildren();
             _previousClosestGroup = null;
+            placedBlock?.Invoke();
         }
-        BlockSpawner.BlocksSettled?.Invoke();
     }
 
     private Vector3 GetMouseWorldPosition()
