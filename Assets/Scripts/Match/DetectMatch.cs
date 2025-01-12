@@ -6,6 +6,7 @@ public class DetectMatch : MonoBehaviour
     private GridInfo _gridInfo;
     [SerializeField]
     private float _animationDuration = 0.3f;
+    private static bool _matchTriggered = false;
 
     private void Start()
     {
@@ -74,6 +75,12 @@ public class DetectMatch : MonoBehaviour
         parentGridNeighbor.CheckAndAdjustOccupation( cornersArrayNeighbor );
         yield return null;
         parentGrid.CheckAndAdjustOccupation( cornersArrayCurrent );
+        if (!_matchTriggered)
+        {
+            _matchTriggered = true;
+            GameManager.MatchMade?.Invoke();
+            StartCoroutine( ResetMatchTriggered() );
+        }
     }
 
     //Since this is a basic animation I used codes to animate instead of clips
@@ -110,6 +117,12 @@ public class DetectMatch : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private IEnumerator ResetMatchTriggered()
+    {
+        yield return null;
+        _matchTriggered = false;
     }
 
     private GameObject[] GetCornerObjects( BlockInfo blockParent )

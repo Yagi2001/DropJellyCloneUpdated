@@ -34,7 +34,6 @@ public class ParentGridInfo : MonoBehaviour
                 if (blockInfo != null)
                 {
                     var cornerObjects = blockInfo.GetCornerStates().Values;
-                    Debug.Log( cornerObjects.Count );
                     GameObject[] cornersArray = new GameObject[cornerObjects.Count];
                     cornerObjects.CopyTo( cornersArray, 0 );
                     yield return null;

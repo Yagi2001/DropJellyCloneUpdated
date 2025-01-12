@@ -37,6 +37,7 @@ public class BlockMovement : MonoBehaviour
         Vector3 finalPosition = transform.position;
         finalPosition.y = targetPosY;
         transform.position = finalPosition;
+        yield return new WaitForSeconds( 0.1f );
         BlockSpawner.BlocksSettled?.Invoke();
         GameManager.MoveMade?.Invoke();
         AdjustGridInfo( targetGrid );

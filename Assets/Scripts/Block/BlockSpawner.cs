@@ -13,6 +13,8 @@ public class BlockSpawner : MonoBehaviour
     private GameObject[] _blockPrefab;
     [SerializeField]
     private GameObject[] _colorPrefabs;
+    [SerializeField]
+    private Transform _blockPosition;
     private void OnEnable()
     {
         BlocksSettled += SpawnBlock;
@@ -42,7 +44,25 @@ public class BlockSpawner : MonoBehaviour
             DestroyRandomChildren( newBlock, numToDestroy );
             _activeBlockCount++;
             _dragAndDrop.block = newBlock;
+            StartCoroutine( MoveToYPosition( newBlock.transform, _blockPosition.position.y ) );
         }
+    }
+
+    private IEnumerator MoveToYPosition( Transform target, float targetY )
+    {
+        float duration = 0.3f;
+        float elapsedTime = 0f;
+
+        Vector3 startPosition = target.position;
+        Vector3 targetPosition = new Vector3( startPosition.x, targetY, startPosition.z );
+
+        while (elapsedTime < duration)
+        {
+            target.position = Vector3.Lerp( startPosition, targetPosition, elapsedTime / duration );
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        target.position = targetPosition;
     }
 
     private void DestroyRandomChildren( GameObject parent, int numToDestroy )

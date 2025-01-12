@@ -72,6 +72,7 @@ public class DragAndDrop : MonoBehaviour
             if (highlight != null)
                 highlight.UnhighlightAllChildren();
             _previousClosestGroup = null;
+            block = null;
             placedBlock?.Invoke();
         }
     }
@@ -130,6 +131,10 @@ public class DragAndDrop : MonoBehaviour
                     furthestGrid = child.gameObject;
                 }
             }
+        }
+        if (furthestGrid == null)
+        {
+            Debug.Log( "All grids are occupied in the previous closest group." );
         }
         return furthestGrid;
     }

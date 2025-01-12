@@ -41,16 +41,15 @@ public class GameManager : MonoBehaviour
     {
         _moveCount--;
         _movesText.text = _moveCount.ToString();
-        if (_moveCount <= 0)
-            _gameOverScreen.SetActive( true );
-
+        if (_moveCount <= 0 && _nextLevelScreen.activeInHierarchy == false)
+                _gameOverScreen.SetActive( true );
     }
 
     private void UpdateGoalCount()
     {
-        _goalCount -= 1;
+        _goalCount -= 2;
         _goalText.text = _goalCount.ToString();
-        if (_goalCount <= 0)
+        if (_goalCount <= 0 && _gameOverScreen.activeInHierarchy == false)
             _nextLevelScreen.SetActive( true );
     }
 
@@ -61,6 +60,10 @@ public class GameManager : MonoBehaviour
         if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
         {
             SceneManager.LoadScene( nextSceneIndex );
+        }
+        else
+        {
+            SceneManager.LoadScene( 0 );
         }
     }
     public void RestartLevel()
